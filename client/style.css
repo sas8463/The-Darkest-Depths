@@ -1,0 +1,243 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#logo {
+    height: 80px;
+    width: 80;
+    padding-top: 10px;
+    float:left;
+    border-radius: 16px;
+}
+
+nav {
+    width: 100%;
+    height: 100px;
+    background-color: #555555;
+}
+
+nav:nth-child(1) {
+    padding-left: 25px;
+}
+
+.navlink {
+    padding: 15px;
+    padding-top: 30px;
+    padding-left: 60px;
+    color: white;
+    font-size: 1.8em;
+    float: left;
+}
+
+.navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+    background-color: #555555;
+    transition: background-color 0.4s ease;
+}
+
+.navlink a:hover {
+    transition: background-color 0.8s ease;
+    background-color: #666666;
+}
+
+.mainForm {
+    height: 300px;
+    width: 350px;
+    margin: 0 auto;
+    padding-top: 350px;
+    font-size: 1.2em;
+}
+
+.mainForm h3 {
+    text-align: center;
+}
+
+.mainForm label {
+    display: inline-block;
+    width: 100px;
+    margin-right: 10px;
+    text-align: right;
+    font-size: 1.2em;
+}
+
+.formSubmit {
+    transition: background-color 0.4s ease;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 14px;
+    font-size: 1.2em;
+    width: 90px;
+    background-color: #555555;
+    border-radius: 2px;
+    padding: 3px 0px;
+    color: black;
+    text-decoration: none;
+}
+
+.formSubmit:link, .formSubmit:visited, .formSubmit:hover, .formSubmit:active {
+    color: white;
+}
+
+.formSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #333333;
+}
+
+#user, #pass, #pass2 {
+    text-align: center;
+    font-size: 1.1em;
+    width: 180px;
+    border-radius: 6px;
+}
+
+#user:focus, #pass:focus, #pass2:focus {
+    outline: none;
+    box-shadow: 0px 0px 1px 1px #55acee;
+}
+
+#error {
+    display:none;
+    top: 250px;
+    width: 250px;
+    height: 650px;
+    position: absolute;
+    z-index: 200;
+    right: 0px;
+    overflow: hidden;
+}
+
+#error h3 {
+    width: 200px;
+    position: absolute;
+    top: 0px;
+    left: 20px;
+}
+
+#speech {
+    height: 120px;
+    width: 250px;
+    z-index:300;
+}
+
+#errorMessage {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: red;
+    font-style: italic;
+}
+
+#gameDiv{
+	margin: auto;
+	max-width: 1200px;
+	max-height: 100%;
+}
+
+#left{
+	margin: auto;
+	width: 50%;
+	max-width: 600px;
+	float: left;	
+}
+
+#right{
+	margin: auto;
+	width: 50%;
+	max-width: 600px;
+	float: left;
+}
+
+#combatLog {
+	width:auto;
+    height:auto;
+    max-width:50%;
+	margin: 24px 24px 24px 24px;
+	padding: 24px 24px 24px 24px;
+}
+
+#miniMap {
+	width:auto;
+    height:auto;
+    max-width:50%;
+	margin: 24px 24px 24px 24px;
+	padding: 24px 24px 24px 24px;
+}
+
+#playerChat{
+	width:auto;
+    height:auto;
+    max-width:50%;
+	margin: 24px 24px 0px 24px;
+	padding: 24px 24px 0px 24px;
+	display: inline;
+}
+
+#chatUI {
+	margin: 0px 24px 24px 24px;
+	padding: 0px 24px 24px 24px;
+}
+
+#playerButtons{
+	width:auto;
+    height:auto;
+    max-width:50%;
+	margin: 24px 24px 24px 24px;
+	padding: 24px 24px 24px 24px;
+	display: inline;
+}
+
+#chatField{
+	width: 250px;
+}
+
+#sendButton{
+	margin: 24px 24px 24px 6px;
+}
+
+#moveDown{
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin: 12px 12px 12px 116px;
+	padding: 12px 12px 12px 12px;
+}
+
+#moveLeft{
+	width: 80px;
+	height: 80px;
+	display: inline;
+	margin: 12px 12px 12px 12px;
+	padding: 12px 12px 12px 12px;
+}
+
+#moveRight{
+	width: 80px;
+	height: 80px;
+	display: inline;
+	margin: 12px 12px 12px 12px;
+	padding: 12px 12px 12px 12px;
+}
+
+#moveUp
+{
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin: 12px 12px 12px 116px;
+	padding: 12px 12px 12px 12px;
+}
+
+#attack{
+	width: 80px;
+	height: 80px;
+	display: inline;
+	margin: 12px 12px 12px 12px;
+	padding: 12px 12px 12px 12px;	
+}

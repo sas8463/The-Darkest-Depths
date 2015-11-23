@@ -1,0 +1,33 @@
+extends ./base.jade
+block append style
+    link(rel="stylesheet", type="text/css", href="/assets/style.css")
+block body
+  nav
+    a(href="/login")
+      img#logo(src="/assets/img/logo.png", alt="game logo")
+    .navlink
+      a(href="/logout") Log out
+  div#gameDiv
+    div#left
+      section#combatLog
+        textarea#combat(rows="20" cols="40" readonly)
+      section#playerChat
+        textarea#chat(rows="20" cols="40" readonly)
+      section#chatUI
+        input#chatField(type='text' placeholder='Chat with players...')
+        input#sendButton(type='button' value='Send')
+    div#right	  
+      section#miniMap
+        canvas#canvas(height="300" width="300")
+      section#playerButtons
+        input#moveUp(type='button' value='Up')
+        input#moveLeft(type='button' value='Left')
+        input#attack(type='button' value='Attack!')
+        input#moveRight(type='button' value='Right')
+        input#moveDown(type='button' value='Down')
+  section#player
+    input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-name="#{player.name}")		
+  #error
+block scripts
+        script(src="/socket.io/socket.io.js")
+        script(src="/assets/gameSockets.js")
