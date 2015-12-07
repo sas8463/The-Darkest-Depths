@@ -7,13 +7,17 @@ var chat, send, message;
 var combatLog;
 var player;
 var up, down, left, right, attack;
+var gameMap;
 
 function updateMap(data){
-
+	console.log(data);
+	//gameMap = data.gameMap;
+	//drawMap();
 }
 
-function drawMap(data){
-
+function drawMap(){
+	//var mapArray = Object.keys(gameMap);
+	//console.log(mapArray);
 }
 
 function updateCombatLog(data){
@@ -26,8 +30,10 @@ function updateChatLog(data){
 }
 
 function sendMessage(){
-	console.log(message.value);
+	if(message.value == "")
+		return;
 	socket.emit('msgToServer', {msg:message.value});
+	message.value = "";
 }
 
 function move(){
@@ -40,7 +46,7 @@ function attack(){
 
 function onClose()
 {
-	socket.emit('close', {name: player.name});
+	socket.emit('close', {player: player});
 	socket.onclose = function(){};
 	socket.close();
 }
@@ -67,27 +73,38 @@ function init() {
 		exp: player.dataset.exp,
 		health: player.dataset.health,
 		damage: player.dataset.damage,
-		defense: player.dataset.defense
+		defense: player.dataset.defense,
+		location: player.dataset.location
 	}
 	
 	console.log(player);
 	
 	socket = io.connect();
-	socket.on('connect', function () {
-		socket.emit('join', {name: player.name});
-	});
-
-	send.addEventListener('click', sendMessage);
-	up.addEventListener('click', move);
-	down.addEventListener('click', move);
-	left.addEventListener('click', move);
-	right.addEventListener('click', move);
-	attack.addEventListener('click', attack);
 	
 	socket.on('draw', drawMap);
 	socket.on('getMap', updateMap);
 	socket.on('attackReceived', updateCombatLog);
 	socket.on('msg', updateChatLog);
+	
+	socket.on('connect', function () {
+		socket.emit('join', {name: player.name});
+	});
+
+	send.addEventListener('click', sendMessage);
+	window.onkeydown = function(e){
+		if (!e) e = window.event;
+		var keyCode = e.keyCode || e.which;
+		if (keyCode == '13'){
+			// Enter pressed
+			sendMessage();
+			return false;
+		}
+	}
+	up.addEventListener('click', move);
+	down.addEventListener('click', move);
+	left.addEventListener('click', move);
+	right.addEventListener('click', move);
+	attack.addEventListener('click', attack);
 }
 
 window.onbeforeunload = onClose;

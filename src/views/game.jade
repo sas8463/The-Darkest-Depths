@@ -26,7 +26,7 @@ block body
         input#moveRight(type='button' value='Right')
         input#moveDown(type='button' value='Down')
   section#player
-    input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-name="#{player.name}")		
+    input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-location="#{player.location}" data-name="#{player.name}")		
   #error
 block scripts
         script(src="/socket.io/socket.io.js")

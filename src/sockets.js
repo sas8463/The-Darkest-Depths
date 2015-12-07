@@ -1,7 +1,8 @@
 //var app = require('http').createServer(handler)
 //var io = require('socket.io')(app);
 var fs = require('fs');
-
+var models = require('./models/');
+var Player = models.Player;
 //var PORT = process.env.PORT || process.env.NODE_PORT || 3000;
 
 //app.listen(PORT);
@@ -23,17 +24,20 @@ var gameMap = {
 };
 
 //Begin Set Connections
-gameMap.room1.up = gameMap.room2; gameMap.room1.down = null; gameMap.room1.left = null; gameMap.room1.right = null; 
-gameMap.room2.up = gameMap.room3; gameMap.room2.down = gameMap.room1; gameMap.room2.left = null; gameMap.room2.right = null; 
-gameMap.room3.up = null; gameMap.room3.down = gameMap.room2; gameMap.room3.left = gameMap.room4; gameMap.room3.right = gameMap.room5; 
-gameMap.room4.up = null; gameMap.room4.down = null; gameMap.room4.left = gameMap.room6; gameMap.room4.right = gameMap.room3; 
-gameMap.room5.up = null; gameMap.room5.down = null; gameMap.room5.left = gameMap.room3; gameMap.room5.right = gameMap.room9; 
-gameMap.room6.up = null; gameMap.room6.down = null; gameMap.room6.left = gameMap.room7; gameMap.room6.right = gameMap.room4; 
-gameMap.room7.up = gameMap.room8; gameMap.room7.down = null; gameMap.room7.left = null; gameMap.room7.right = gameMap.room6; 
-gameMap.room8.up = null; gameMap.room8.down = gameMap.room7; gameMap.room8.left = null; gameMap.room8.right = null; 
-gameMap.room9.up = null; gameMap.room9.down = null; gameMap.room9.left = gameMap.room5; gameMap.room9.right = gameMap.room10; 
-gameMap.room10.up = gameMap.room11; gameMap.room10.down = null; gameMap.room10.left = gameMap.room9; gameMap.room10.right = null; 
-gameMap.room11.up = null; gameMap.room11.down = gameMap.room10; gameMap.room11.left = null; gameMap.room11.right = null; 
+var setUpMapConnections = function()
+{
+	gameMap.room1.up = gameMap.room2; gameMap.room1.down = null; gameMap.room1.left = null; gameMap.room1.right = null; 
+	gameMap.room2.up = gameMap.room3; gameMap.room2.down = gameMap.room1; gameMap.room2.left = null; gameMap.room2.right = null; 
+	gameMap.room3.up = null; gameMap.room3.down = gameMap.room2; gameMap.room3.left = gameMap.room4; gameMap.room3.right = gameMap.room5; 
+	gameMap.room4.up = null; gameMap.room4.down = null; gameMap.room4.left = gameMap.room6; gameMap.room4.right = gameMap.room3; 
+	gameMap.room5.up = null; gameMap.room5.down = null; gameMap.room5.left = gameMap.room3; gameMap.room5.right = gameMap.room9; 
+	gameMap.room6.up = null; gameMap.room6.down = null; gameMap.room6.left = gameMap.room7; gameMap.room6.right = gameMap.room4; 
+	gameMap.room7.up = gameMap.room8; gameMap.room7.down = null; gameMap.room7.left = null; gameMap.room7.right = gameMap.room6; 
+	gameMap.room8.up = null; gameMap.room8.down = gameMap.room7; gameMap.room8.left = null; gameMap.room8.right = null; 
+	gameMap.room9.up = null; gameMap.room9.down = null; gameMap.room9.left = gameMap.room5; gameMap.room9.right = gameMap.room10; 
+	gameMap.room10.up = gameMap.room11; gameMap.room10.down = null; gameMap.room10.left = gameMap.room9; gameMap.room10.right = null; 
+	gameMap.room11.up = null; gameMap.room11.down = gameMap.room10; gameMap.room11.left = null; gameMap.room11.right = null; 
+}
 //End Set Connections
 
 /*function handler (req, res) {
@@ -49,6 +53,7 @@ gameMap.room11.up = null; gameMap.room11.down = gameMap.room10; gameMap.room11.l
 
 var configureSockets = function(socketio)
 {
+	setUpMapConnections();
 	io = socketio;
 	
 	io.on('connection', function (socket) {
@@ -79,6 +84,8 @@ var configureSockets = function(socketio)
 				name: 'Server',
 				msg: 'You joined the server.'
 			});
+			//console.log(gameMap);
+			socket.emit('getMap', gameMap); 	
 		});
 		
 		socket.on('close', function(data) {
@@ -88,14 +95,17 @@ var configureSockets = function(socketio)
 				name: 'Server',
 				msg: socket.name + " has disconnected."
 			});
+			
+			Player.PlayerModel.savePlayerData(data.player);
 		});
 		
 		socket.on('draw', function(data) {	
 			io.sockets.in('room1').emit('draw', {name:data.name, coords:data.coords}); 
 		});
 		
-		socket.on('getMap', function() {
-			io.sockets.in('room1').emit('getMap', {gameMap:gameMap}); 
+		socket.on('getMap', function(data) {
+			console.log("updating map");
+			io.sockets.in('room1').emit('updateMap', {gameMap:gameMap}); 
 		});
 		
 		socket.on('attackEnemy', function(data) {
