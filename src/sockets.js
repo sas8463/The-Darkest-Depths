@@ -10,6 +10,20 @@ var Player = models.Player;
 var users = {};
 
 var gameMap = {
+	room1: {posX: 145, posY: 280, up: 'room2', down: null, left: null, right: null, safe:true},
+	room2: {posX: 145, posY: 260, up: 'room3', down: 'room1', left: null, right: null, safe:false, enemy:{name:"Slime", alive:true, health:5, damage: 1, timer:10000}},
+	room3: {posX: 145, posY: 240, up: null, down: 'room2', left: 'room4', right: 'room5', safe:false, enemy:{name:"Wolf", alive:true, health:10, damage: 2, timer:10000}},
+	room4: {posX: 125, posY: 240, up: null, down: null, left: 'room6', right: 'room3', safe:true},
+	room5: {posX: 165, posY: 240, up: null, down: null, left: 'room3', right: 'room9', safe:true},
+	room6: {posX: 105, posY: 240, up: null, down: null, left: 'room7', right: 'room4', safe:false, enemy:{name:"Skeleton", alive:true, health:15, damage: 2, timer:15000}},
+	room7: {posX: 85, posY: 240, up: 'room8', down: null, left: null, right: 'room6', safe:false, enemy:{name:"Zombie", alive:true, health:10, damage: 3, timer:20000}},
+	room8: {posX: 85, posY: 220, up: null, down: 'room7', left: null, right: null, safe:false, enemy:{name:"Necromancer", alive:true, health:25, damage: 5, timer:25000}},
+	room9: {posX: 185, posY: 240, up: null, down: null, left: 'room5', right: 'room10', safe:false, enemy:{name:"Bandit Rogue", alive:true, health:10, damage: 3, timer:15000}},
+	room10: {posX: 205, posY: 240, up: 'room11', down: null, left: 'room9', right: null, safe:false, enemy:{name:"Bandit Warrior", alive:true, health:15, damage: 2, timer:20000}},
+	room11: {posX: 205, posY: 220, up: null, down: 'room10', left: null, right: null, safe:false, enemy:{name:"Bandit Champion", alive:true, health:25, damage: 5, timer:25000}}
+};
+/*
+var gameMap = {
 	room1: {posX: 145, posY: 290, up: null, down: null, left: null, right: null, safe:true},
 	room2: {posX: 145, posY: 280, up: null, down: null, left: null, right: null, safe:false, enemy:{name:"Slime", alive:true, health:5, damage: 1, timer:10000}},
 	room3: {posX: 145, posY: 270, up: null, down: null, left: null, right: null, safe:false, enemy:{name:"Wolf", alive:true, health:10, damage: 2, timer:10000}},
@@ -39,21 +53,11 @@ var setUpMapConnections = function()
 	gameMap.room11.up = null; gameMap.room11.down = gameMap.room10; gameMap.room11.left = null; gameMap.room11.right = null; 
 }
 //End Set Connections
-
-/*function handler (req, res) {
-  fs.readFile(__dirname + '/../client/index.html', function (err, data) {
-    if (err) {
-      throw err;
-    }
-
-    res.writeHead(200);
-    res.end(data);
-  });
-}*/
+*/
 
 var configureSockets = function(socketio)
 {
-	setUpMapConnections();
+	//setUpMapConnections();
 	io = socketio;
 	
 	io.on('connection', function (socket) {
@@ -85,7 +89,7 @@ var configureSockets = function(socketio)
 				msg: 'You joined the server.'
 			});
 			//console.log(gameMap);
-			socket.emit('getMap', gameMap); 	
+			socket.emit('getMap', {gameMap: gameMap}); 	
 		});
 		
 		socket.on('close', function(data) {
@@ -105,7 +109,7 @@ var configureSockets = function(socketio)
 		
 		socket.on('getMap', function(data) {
 			console.log("updating map");
-			io.sockets.in('room1').emit('updateMap', {gameMap:gameMap}); 
+			io.sockets.in('room1').emit('getMap', {gameMap:gameMap}); 
 		});
 		
 		socket.on('attackEnemy', function(data) {
@@ -114,8 +118,9 @@ var configureSockets = function(socketio)
 		});
 		
 		socket.on('changeRoom', function(data) {
-			users[socket.name].currentRoom = data.room;
-			//io.sockets.in('room1').emit('attackReceived', {msg:data.msg}); 
+			users[socket.name].currentRoom = gameMap[data.room];
+			//io.sockets.in('room1').emit('attackReceived', {msg:data.msg});
+			io.sockets.in('room1').emit('getMap', {gameMap:gameMap});			
 		});
 		
 		socket.on('disconnect', function(data) {

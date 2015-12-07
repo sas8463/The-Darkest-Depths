@@ -10,14 +10,24 @@ var up, down, left, right, attack;
 var gameMap;
 
 function updateMap(data){
-	console.log(data);
-	//gameMap = data.gameMap;
-	//drawMap();
+	gameMap = data.gameMap;
+	drawMap();
 }
 
 function drawMap(){
-	//var mapArray = Object.keys(gameMap);
-	//console.log(mapArray);
+	var mapArray = Object.keys(gameMap);
+	mapArray.forEach(function(value, index, ar){
+		ctx.beginPath();
+		if(value == player.location)
+			ctx.fillStyle = "gray";
+		else
+			ctx.fillStyle = "black";
+		var xPos = gameMap[value].posX;
+		var yPos = gameMap[value].posY;
+		ctx.rect(xPos,yPos,18,18);
+		ctx.closePath();
+		ctx.fill();
+	});
 }
 
 function updateCombatLog(data){
@@ -25,8 +35,8 @@ function updateCombatLog(data){
 }
 
 function updateChatLog(data){
-	console.log("msg:" + data.msg);
 	chat.innerHTML += ("\n" + data.name + ": " + data.msg);
+	chat.scrollTop = chat.scrollHeight;
 }
 
 function sendMessage(){
@@ -36,8 +46,52 @@ function sendMessage(){
 	message.value = "";
 }
 
-function move(){
-	
+function moveUp(){
+	if(gameMap[player.location].up == null)
+		combatLog.innerHTML += ("There is no room in that direction! \n");
+	else
+	{
+		player.location = gameMap[player.location].up;
+		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
+		socket.emit('changeRoom', {room: player.location});	
+	}
+	combatLog.scrollTop = combatLog.scrollHeight;	
+}
+
+function moveDown(){
+	if(gameMap[player.location].down == null)
+		combatLog.innerHTML += ("There is no room in that direction! \n");
+	else
+	{
+		player.location = gameMap[player.location].down;
+		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
+		socket.emit('changeRoom', {room: player.location});	
+	}
+	combatLog.scrollTop = combatLog.scrollHeight;
+}
+
+function moveLeft(){
+	if(gameMap[player.location].left == null)
+		combatLog.innerHTML += ("There is no room in that direction! \n");
+	else
+	{
+		player.location = gameMap[player.location].left;
+		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
+		socket.emit('changeRoom', {room: player.location});	
+	}
+	combatLog.scrollTop = combatLog.scrollHeight;
+}
+
+function moveRight(){
+	if(gameMap[player.location].right == null)
+		combatLog.innerHTML += ("There is no room in that direction! \n");
+	else
+	{
+		player.location = gameMap[player.location].right;
+		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
+		socket.emit('changeRoom', {room: player.location});	
+	}
+	combatLog.scrollTop = combatLog.scrollHeight;
 }
 
 function attack(){
@@ -55,7 +109,7 @@ function init() {
 	canvas = document.querySelector("#canvas");
 	ctx = canvas.getContext("2d");
 	chat = document.querySelector("#chat");
-	combatLog = document.querySelector("#combatLog");
+	combatLog = document.querySelector("#combat");
 	send = document.querySelector("#sendButton");
 	message = document.querySelector("#chatField");
 	up = document.querySelector("#moveUp");
@@ -100,10 +154,10 @@ function init() {
 			return false;
 		}
 	}
-	up.addEventListener('click', move);
-	down.addEventListener('click', move);
-	left.addEventListener('click', move);
-	right.addEventListener('click', move);
+	up.addEventListener('click', moveUp);
+	down.addEventListener('click', moveDown);
+	left.addEventListener('click', moveLeft);
+	right.addEventListener('click', moveRight);
 	attack.addEventListener('click', attack);
 }
 
