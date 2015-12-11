@@ -182,8 +182,6 @@ function healPlayer(){
 	if(gameMap[player.location].safe)
 	{
 		player.health++;
-		console.log(player.health);
-		console.log(player.maxHealth);
 		if(player.health > player.maxHealth)
 		{
 			player.health = player.maxHealth;
@@ -238,7 +236,6 @@ function init() {
 	socket.on('attackReceived', receiveAttack);
 	socket.on('msg', updateChatLog);
 	
-	console.log(player.location);
 	socket.on('connect', function () {
 		socket.emit('join', {name: player.name, location: player.location});
 	});
