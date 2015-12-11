@@ -68,7 +68,7 @@ var configureSockets = function(socketio)
 			
 			socket.name = data.name;
 			
-			users[socket.name] = {name: socket.name, currentRoom: gameMap.room1};
+			users[socket.name] = {name: socket.name, currentRoom: data.location};
 			
 			var joinMsg = {
 				name: 'Server',
@@ -77,7 +77,7 @@ var configureSockets = function(socketio)
 			
 			socket.emit('msg', joinMsg);
 			
-			socket.join('room1');
+			socket.join(data.location);
 			
 			socket.broadcast.emit('msg', {
 				name: 'Server',
@@ -95,7 +95,7 @@ var configureSockets = function(socketio)
 		socket.on('close', function(data) {
 			delete users[socket.name];
 			console.log("Disconnected " + socket.name);
-			io.sockets.in('room1').emit('msg', {
+			io.sockets.emit('msg', {
 				name: 'Server',
 				msg: socket.name + " has disconnected."
 			});
@@ -103,28 +103,52 @@ var configureSockets = function(socketio)
 			Player.PlayerModel.savePlayerData(data.player);
 		});
 		
-		socket.on('draw', function(data) {	
-			io.sockets.in('room1').emit('draw', {name:data.name, coords:data.coords}); 
-		});
-		
 		socket.on('getMap', function(data) {
 			console.log("updating map");
-			io.sockets.in('room1').emit('getMap', {gameMap:gameMap}); 
+			io.sockets.emit('getMap', {gameMap: gameMap}); 
 		});
 		
 		socket.on('attackEnemy', function(data) {
 			//Update the attack to the map
-			io.sockets.in('room1').emit('attackReceived', {msg:data.msg, gameMap:gameMap}); 
+			var room = users[socket.name].currentRoom;
+			var message = socket.name + " attacked " + gameMap[room].enemy.name + "! \n";
+			socket.broadcast.in(room).emit('updateCombatLog', {msg: message});
+			
+			message = "You attacked " + gameMap[room].enemy.name + " for some amount of damage! \n";
+			socket.emit('updateCombatLog', {msg: message});
+			
+			message = gameMap[room].enemy.name + " attacked " + socket.name + " in retaliation! \n";
+			socket.broadcast.in(room).emit('updateCombatLog', {msg: message});
+			
+			message = gameMap[room].enemy.name + " attacked you in retaliation for some amount of damage! \n";
+			socket.emit('updateCombatLog', {msg: message});
+			
+			socket.emit('attackReceived', {gameMap: gameMap}); 
+			io.sockets.in(room).broadcast.emit('updateCombatLog', {msg: message});
 		});
 		
 		socket.on('changeRoom', function(data) {
-			users[socket.name].currentRoom = gameMap[data.room];
-			//io.sockets.in('room1').emit('attackReceived', {msg:data.msg});
-			io.sockets.in('room1').emit('getMap', {gameMap:gameMap});			
+			socket.join(data.newRoom);
+			if(!(gameMap[data.oldRoom].safe))
+			{
+				var message = gameMap[data.oldRoom].enemy.name + " attacked " + socket.name + " as he left the room! \n";
+				socket.broadcast.in(data.oldRoom).emit('updateCombatLog', {msg: message});
+				
+				message = gameMap[data.oldRoom].enemy.name + " attacked you for some damage as you left the room! \n";
+				socket.emit('updateCombatLog', {msg: message});
+				
+				socket.emit('attackReceived', {gameMap: gameMap}); 
+			}
+			users[socket.name].currentRoom = data.newRoom;
+			socket.emit('getMap', {gameMap: gameMap});		
+			socket.leave(data.oldRoom);
+			
+			message = socket.name + "has entered your room! \n";
+			socket.broadcast.in(data.newRoom).emit('updateCombatLog', {msg: message});
 		});
 		
 		socket.on('disconnect', function(data) {
-			socket.leave('room1');
+			socket.leave(users[socket.name].currentRoom);
 		});
 		
 		socket.on('msgToServer', function(data) {

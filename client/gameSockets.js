@@ -31,7 +31,7 @@ function drawMap(){
 }
 
 function updateCombatLog(data){
-	combatLog.innerHTML += ("\n" + data.msg);
+	combatLog.innerHTML += (data.msg);
 }
 
 function updateChatLog(data){
@@ -51,9 +51,10 @@ function moveUp(){
 		combatLog.innerHTML += ("There is no room in that direction! \n");
 	else
 	{
+		var prevRoom = player.location;
 		player.location = gameMap[player.location].up;
 		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
-		socket.emit('changeRoom', {room: player.location});	
+		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;	
 }
@@ -63,9 +64,10 @@ function moveDown(){
 		combatLog.innerHTML += ("There is no room in that direction! \n");
 	else
 	{
+		var prevRoom = player.location;
 		player.location = gameMap[player.location].down;
 		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
-		socket.emit('changeRoom', {room: player.location});	
+		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
 }
@@ -75,9 +77,10 @@ function moveLeft(){
 		combatLog.innerHTML += ("There is no room in that direction! \n");
 	else
 	{
+		var prevRoom = player.location;
 		player.location = gameMap[player.location].left;
 		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
-		socket.emit('changeRoom', {room: player.location});	
+		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
 }
@@ -87,11 +90,16 @@ function moveRight(){
 		combatLog.innerHTML += ("There is no room in that direction! \n");
 	else
 	{
+		var prevRoom = player.location;
 		player.location = gameMap[player.location].right;
 		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
-		socket.emit('changeRoom', {room: player.location});	
+		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
+}
+
+function receiveAttack(){
+	
 }
 
 function attack(){
@@ -135,13 +143,13 @@ function init() {
 	
 	socket = io.connect();
 	
-	socket.on('draw', drawMap);
 	socket.on('getMap', updateMap);
-	socket.on('attackReceived', updateCombatLog);
+	socket.on('updateCombatLog', updateCombatLog);
+	socket.on('attackReceived', receiveAttack);
 	socket.on('msg', updateChatLog);
 	
 	socket.on('connect', function () {
-		socket.emit('join', {name: player.name});
+		socket.emit('join', {name: player.name, location: player.location});
 	});
 
 	send.addEventListener('click', sendMessage);
