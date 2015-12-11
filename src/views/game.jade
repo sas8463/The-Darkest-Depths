@@ -17,16 +17,23 @@ block body
         input#chatField(type='text' placeholder='Chat with players...')
         input#sendButton(type='button' value='Send')
     div#right	  
+      section#enemy
+        p#enemyName Currently, there is no enemy
+        p#enemyHealth 
+        p#enemySpawnTimer 	
       section#miniMap
-        canvas#canvas(height="300" width="300")
+        canvas#canvas(height="250" width="350")
       section#playerButtons
         input#moveUp(type='button' value='Up')
         input#moveLeft(type='button' value='Left')
         input#attack(type='button' value='Attack!')
         input#moveRight(type='button' value='Right')
         input#moveDown(type='button' value='Down')
-  section#player
-    input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-location="#{player.location}" data-name="#{player.name}")		
+    section#player
+      p#playerInfo #{player.name}'s Player Information
+      p#playerHealth Health: #{player.health}
+      p#playerLevel Level: #{player.level} Exp: #{player.exp}
+      input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-maxhealth="#{player.maxHealth}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-location="#{player.location}" data-name="#{player.name}")		
   #error
 block scripts
         script(src="/socket.io/socket.io.js")

@@ -6,6 +6,12 @@ html, body {
     overflow-x: hidden;
 }
 
+textarea {
+	resize: vertical;
+	width: 350px;
+	height: 350px;
+}
+
 #logo {
     height: 80px;
     width: 80;
@@ -166,8 +172,8 @@ nav:nth-child(1) {
 	width:auto;
     height:auto;
     max-width:50%;
-	margin: 24px 24px 24px 24px;
-	padding: 24px 24px 24px 24px;
+	margin: 0px 24px 24px 24px;
+	padding: 0px 24px 24px 24px;
 }
 
 #playerChat{
@@ -182,15 +188,6 @@ nav:nth-child(1) {
 #chatUI {
 	margin: 0px 24px 24px 24px;
 	padding: 0px 24px 24px 24px;
-}
-
-#playerButtons{
-	width:auto;
-    height:auto;
-    max-width:50%;
-	margin: 24px 24px 24px 24px;
-	padding: 24px 24px 24px 24px;
-	display: inline;
 }
 
 #chatField{
@@ -241,3 +238,40 @@ nav:nth-child(1) {
 	margin: 12px 12px 12px 12px;
 	padding: 12px 12px 12px 12px;	
 }
+
+
+#playerButtons{
+	margin: 24px 24px 24px 24px;
+	padding: 24px 24px 24px 24px;
+	display: inline;
+}
+
+#enemyName{
+	margin-top: 24px;
+	padding-top: 24px;
+	margin-bottom: 6px;
+}
+
+#enemyHealth{
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+#enemySpawnTimer{
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+#playerInfo{
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+#playerHealth{
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+#playerLevel{
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+

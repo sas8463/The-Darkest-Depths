@@ -36,6 +36,13 @@ var PlayerSchema = new mongoose.Schema({
 		default: 50
 	},
 	
+	maxHealth: {
+		type: Number,
+		min: 50,
+		required: true,
+		default: 50
+	},
+	
 	damage: {
 		type: Number,
 		min: 1,
@@ -70,6 +77,7 @@ PlayerSchema.methods.toAPI = function() {
 		level: this.level,
 		exp: this.exp,
 		health: this.health,
+		maxHealth: this.maxHealth,
 		damage: this.damage,
 		defense: this.defense,
 		location: this.location
@@ -92,20 +100,28 @@ PlayerSchema.statics.savePlayerData = function(player) {
 	
 	PlayerModel.findOne(search, function(err, doc){
 		if(err)
-			return res.json({err:err});
+		{
+			console.log(err);
+			return;
+		}
 		else if(doc == null)
-			return res.json({error: "Player Does Not Exist"});
+		{
+			console.log("Player does not exist");
+			return;
+		}
 		else
 		{
 			doc.level = player.level;
 			doc.exp = player.exp;
 			doc.health = player.health;
+			doc.maxHealth = player.maxHealth;
 			doc.damage = player.damage;
 			doc.defense = player.defense;
 			doc.location = player.location;
 			doc.save(function(err){
 				if(err){
-					return res.json({err:err});
+					console.log(err);
+					return;
 				}
 			});
 			console.log("Saved player data");
