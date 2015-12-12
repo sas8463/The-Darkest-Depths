@@ -176,17 +176,25 @@ var configureSockets = function(socketio)
 			
 			message = "List of players in this room:\n";
 			socket.emit('updateCombatLog', {msg: message});
-			users.forEach(function(value, index, ar)
+			var usersArr = Object.keys(users);
+			var emptyRoom = true;
+			usersArr.forEach(function(value, index, ar)
 			{
 				if(!(value.name == socket.name))
 				{
 					if(value.currentRoom == data.newRoom)
 					{
+						emptyRoom = false;
 						message = value.name + "\n";
 						socket.emit('updateCombatLog', {msg: message});
 					}
 				}
 			});
+			if(emptyRoom)
+			{
+				message = "There are no players in this room.\n";
+				socket.emit('updateCombatLog', {msg: message});
+			}
 		});
 		
 		socket.on('disconnect', function(data) {
