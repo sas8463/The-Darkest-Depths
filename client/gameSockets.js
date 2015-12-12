@@ -17,7 +17,7 @@ function updateMap(data){
 	{
 		enemyName.innerHTML = "Name: This room is safe!";
 		enemyHealth.innerHTML = "Health: You can recover health over time here.";
-		enemySpawnTimer.innerHTML = "Timer: 1 second";
+		enemySpawnTimer.innerHTML = "Heal Timer: 1 second";
 	}
 	else
 	{
@@ -192,7 +192,7 @@ function gainExp(data){
 		player.damage += player.level;
 		player.defense += player.level;
 		player.exp -= 100;
-		player.exp = Math.ceil((player.exp/player.level));
+		player.exp = Math.round((player.exp/(player.level * 5)));
 	}
 	combatLog.innerHTML += ("You've gained " + expGain + " exp! \n");
 	playerLevel.innerHTML = "Level: " + player.level + " Exp: " + player.exp;
@@ -201,7 +201,7 @@ function gainExp(data){
 function healPlayer(){
 	if(gameMap[player.location].safe)
 	{
-		player.health++;
+		player.health += Math.ceil(player.maxHealth / 60);
 		if(player.health > player.maxHealth)
 		{
 			player.health = player.maxHealth;
