@@ -171,8 +171,22 @@ var configureSockets = function(socketio)
 			socket.leave(data.oldRoom);
 			
 			//Update the new room's players that you entered
-			message = socket.name + "has entered your room! \n";
+			message = socket.name + " has entered your room! \n";
 			socket.broadcast.in(data.newRoom).emit('updateCombatLog', {msg: message});
+			
+			message = "List of players in this room:\n";
+			socket.emit('updateCombatLog', {msg: message});
+			users.forEach(function(value, index, ar)
+			{
+				if(!(value.name == socket.name))
+				{
+					if(value.currentRoom == data.newRoom)
+					{
+						message = value.name + "\n";
+						socket.emit('updateCombatLog', {msg: message});
+					}
+				}
+			});
 		});
 		
 		socket.on('disconnect', function(data) {

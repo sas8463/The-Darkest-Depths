@@ -281,4 +281,5 @@ function init() {
 }
 
 window.onbeforeunload = onClose;
+window.onunload = onClose;
 window.onload = init;
