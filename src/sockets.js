@@ -180,12 +180,12 @@ var configureSockets = function(socketio)
 			var emptyRoom = true;
 			usersArr.forEach(function(value, index, ar)
 			{
-				if(!(value.name == socket.name))
+				if(!(users[value].name == socket.name))
 				{
-					if(value.currentRoom == data.newRoom)
+					if(users[value].currentRoom == data.newRoom)
 					{
 						emptyRoom = false;
-						message = value.name + "\n";
+						message = users[value].name + "\n";
 						socket.emit('updateCombatLog', {msg: message});
 					}
 				}
