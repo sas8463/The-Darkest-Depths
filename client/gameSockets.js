@@ -69,7 +69,7 @@ function moveUp(){
 		var prevRoom = player.location;
 		if(!(gameMap[prevRoom].safe))
 		{
-			if(gameMap[prevRoom].enemy.health > 0)
+			if(gameMap[prevRoom].enemy.alive)
 			{
 				damage = gameMap[prevRoom].enemy.damage - player.defense;
 				if(damage <= 0)
@@ -92,7 +92,7 @@ function moveDown(){
 		var prevRoom = player.location;
 		if(!(gameMap[prevRoom].safe))
 		{
-			if(gameMap[prevRoom].enemy.health > 0)
+			if(gameMap[prevRoom].enemy.alive)
 			{
 				damage = gameMap[prevRoom].enemy.damage - player.defense;
 				if(damage <= 0)
@@ -115,7 +115,7 @@ function moveLeft(){
 		var prevRoom = player.location;
 		if(!(gameMap[prevRoom].safe))
 		{
-			if(gameMap[prevRoom].enemy.health > 0)
+			if(gameMap[prevRoom].enemy.alive)
 			{
 				damage = gameMap[prevRoom].enemy.damage - player.defense;
 				if(damage <= 0)
@@ -138,7 +138,7 @@ function moveRight(){
 		var prevRoom = player.location;
 		if(!(gameMap[prevRoom].safe))
 		{
-			if(gameMap[prevRoom].enemy.health > 0)
+			if(gameMap[prevRoom].enemy.alive)
 			{
 				damage = gameMap[prevRoom].enemy.damage - player.defense;
 				if(damage <= 0)
@@ -158,6 +158,8 @@ function receiveAttack(data){
 	{
 		player.health = 0;
 		player.exp = 0;
+		console.log(player.exp);
+		playerLevel.innerHTML = "Level: " + player.level + " Exp: " + player.exp;
 		socket.emit('changeRoom', {newRoom: 'room1', oldRoom: player.location, damageTaken: 0});
 		player.location = 'room1';
 		socket.emit('playerDeath');
@@ -169,6 +171,7 @@ function attackEnemy(){
 	if(gameMap[player.location].safe || !(gameMap[player.location].enemy.alive))
 	{
 		combatLog.innerHTML += ("Currenty, there is no enemy in this room! \n");
+		combatLog.scrollTop = combatLog.scrollHeight;
 		return;
 	}
 	var damageTaken = gameMap[player.location].enemy.damage - player.defense;
@@ -176,6 +179,23 @@ function attackEnemy(){
 		damageTaken = 1;
 	var damageDealt = player.damage;
 	socket.emit('attackEnemy', {damageTaken: damageTaken, damageDealt: damageDealt});
+	gainExp({exp: damageDealt});
+}
+
+function gainExp(data){
+	var expGain = Math.round((data.exp/(player.level * 5)));
+	player.exp += expGain;
+	if(player.exp >= 100)
+	{
+		player.level++;
+		player.maxHealth += 5*player.level;
+		player.damage += player.level;
+		player.defense += player.level;
+		player.exp -= 100;
+		player.exp = Math.ceil((player.exp/player.level));
+	}
+	combatLog.innerHTML += ("You've gained " + expGain + " exp! \n");
+	playerLevel.innerHTML = "Level: " + player.level + " Exp: " + player.exp;
 }
 
 function healPlayer(){
@@ -212,19 +232,19 @@ function init() {
 	player = document.querySelector("#playerVar");
 	playerHealth = document.querySelector("#playerHealth");
 	playerLevel = document.querySelector("#playerLevel");
-	playerExp = document.querySelector("#playerExp");
+	//playerExp = document.querySelector("#playerExp");
 	enemyName = document.querySelector("#enemyName");
 	enemyHealth = document.querySelector("#enemyHealth");
 	enemySpawnTimer = document.querySelector("#enemySpawnTimer");
 	
 	player = {
 		name: player.dataset.name,
-		level: player.dataset.level,
-		exp: player.dataset.exp,
-		health: player.dataset.health,
-		maxHealth: player.dataset.maxhealth,
-		damage: player.dataset.damage,
-		defense: player.dataset.defense,
+		level: parseInt(player.dataset.level, 10),
+		exp: parseInt(player.dataset.exp, 10),
+		health: parseInt(player.dataset.health, 10),
+		maxHealth: parseInt(player.dataset.maxhealth, 10),
+		damage: parseInt(player.dataset.damage, 10),
+		defense: parseInt(player.dataset.defense, 10),
 		location: player.dataset.location
 	}
 	
@@ -234,6 +254,7 @@ function init() {
 	socket.on('drawMap', drawMap);
 	socket.on('updateCombatLog', updateCombatLog);
 	socket.on('attackReceived', receiveAttack);
+	socket.on('gainExp', gainExp);
 	socket.on('msg', updateChatLog);
 	
 	socket.on('connect', function () {

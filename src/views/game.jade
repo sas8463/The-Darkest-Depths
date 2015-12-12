@@ -16,7 +16,7 @@ block body
       section#chatUI
         input#chatField(type='text' placeholder='Chat with players...')
         input#sendButton(type='button' value='Send')
-    div#right	  
+    div#right
       section#enemy
         p#enemyName Currently, there is no enemy
         p#enemyHealth 
@@ -33,7 +33,7 @@ block body
       p#playerInfo #{player.name}'s Player Information
       p#playerHealth Health: #{player.health}
       p#playerLevel Level: #{player.level} Exp: #{player.exp}
-      input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-maxhealth="#{player.maxHealth}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-location="#{player.location}" data-name="#{player.name}")		
+      input#playerVar(type='hidden' value="#{player}" data-level="#{player.level}" data-exp="#{player.exp}" data-health="#{player.health}" data-maxhealth="#{player.maxHealth}" data-damage="#{player.damage}" data-defense="#{player.defense}" data-location="#{player.location}" data-name="#{player.name}")
   #error
 block scripts
         script(src="/socket.io/socket.io.js")

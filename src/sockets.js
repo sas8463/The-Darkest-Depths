@@ -31,13 +31,14 @@ function updateSpawnTimers(){
 	{
 		if(!(gameMap[value].safe))
 		{
-			if(gameMap[value].enemy.health <= 0)
+			if(!(gameMap[value].enemy.alive))
 			{
 				gameMap[value].enemy.timer -= 1000;
 				if(gameMap[value].enemy.timer <= -1)
 				{
 					gameMap[value].enemy.timer = gameMap[value].enemy.maxTimer;
 					gameMap[value].enemy.health = gameMap[value].enemy.maxHealth; 
+					gameMap[value].enemy.alive = true; 
 				}
 				io.sockets.in(value).emit('getMap', {gameMap: gameMap});
 			}
@@ -126,6 +127,16 @@ var configureSockets = function(socketio)
 			
 			//Update yourself based on the attack
 			socket.emit('attackReceived', {damage: data.damageTaken}); 
+			
+			if(gameMap[room].enemy.health <= 0)
+			{
+				gameMap[room].enemy.alive = false;
+				gameMap[room].enemy.health = 0;
+				message = gameMap[room].enemy.name + " has been slain! \n";
+				io.sockets.in(room).emit('updateCombatLog', {msg: message});
+
+				io.sockets.in(room).emit('gainExp', {exp: (gameMap[room].enemy.maxHealth * 5)});
+			}
 			
 			//Send everyone the new map data, due to damaged enemy
 			io.sockets.emit('getMap', {gameMap: gameMap});
