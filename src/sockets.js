@@ -10,19 +10,28 @@ var Player = models.Player;
 var users = {};
 
 var gameMap = {
-	room1: {posX: 145, posY: 180, up: 'room2', down: null, left: null, right: null, safe:true},
-	room2: {posX: 145, posY: 160, up: 'room3', down: 'room1', left: null, right: null, safe:false, enemy:{name:"Slime", alive:true, health:10, maxHealth:10, damage: 10, timer:10000, maxTimer:10000}},
-	room3: {posX: 145, posY: 140, up: null, down: 'room2', left: 'room4', right: 'room5', safe:false, enemy:{name:"Wolf", alive:true, health:20, maxHealth:20, damage: 13, timer:10000, maxTimer:10000}},
-	room4: {posX: 125, posY: 140, up: null, down: null, left: 'room6', right: 'room3', safe:true},
-	room5: {posX: 165, posY: 140, up: null, down: null, left: 'room3', right: 'room9', safe:true},
-	room6: {posX: 105, posY: 140, up: null, down: null, left: 'room7', right: 'room4', safe:false, enemy:{name:"Skeleton", alive:true, health:30, maxHealth:30, damage: 13, timer:15000, maxTimer:15000}},
-	room7: {posX: 85, posY: 140, up: 'room8', down: null, left: null, right: 'room6', safe:false, enemy:{name:"Zombie", alive:true, health:20, maxHealth:20, damage: 15, timer:20000, maxTimer:20000}},
-	room8: {posX: 85, posY: 120, up: null, down: 'room7', left: 'room12', right: null, safe:false, enemy:{name:"Necromancer", alive:true, health:50, maxHealth:50, damage: 20, timer:25000, maxTimer:25000}},
-	room9: {posX: 185, posY: 140, up: null, down: null, left: 'room5', right: 'room10', safe:false, enemy:{name:"Bandit Rogue", alive:true, health:20, maxHealth:20, damage: 15, timer:15000, maxTimer:15000}},
-	room10: {posX: 205, posY: 140, up: 'room11', down: null, left: 'room9', right: null, safe:false, enemy:{name:"Bandit Warrior", alive:true, health:30, maxHealth:30, damage: 13, timer:20000, maxTimer:20000}},
-	room11: {posX: 205, posY: 120, up: null, down: 'room10', left: null, right: 'room13', safe:false, enemy:{name:"Bandit Champion", alive:true, health:50, maxHealth:50, damage: 20, timer:25000, maxTimer:25000}},
-	room12: {posX: 65, posY: 120, up: null, down: null, left: null, right: 'room8', safe:true},
-	room13: {posX: 225, posY: 120, up: null, down: null, left: 'room11', right: null, safe:true}
+	room1: {posX: 180, posY: 230, up: 'room2', down: null, left: null, right: null, safe:true},
+	room2: {posX: 180, posY: 210, up: 'room3', down: 'room1', left: null, right: null, safe:false, enemy:{name:"Slime", alive:true, health:10, maxHealth:10, damage: 10, timer:10000, maxTimer:10000}},
+	room3: {posX: 180, posY: 190, up: null, down: 'room2', left: 'room4', right: 'room5', safe:false, enemy:{name:"Wolf", alive:true, health:20, maxHealth:20, damage: 13, timer:10000, maxTimer:10000}},
+	room4: {posX: 160, posY: 190, up: null, down: null, left: 'room6', right: 'room3', safe:true},
+	room5: {posX: 200, posY: 190, up: null, down: null, left: 'room3', right: 'room9', safe:true},
+	room6: {posX: 140, posY: 190, up: null, down: null, left: 'room7', right: 'room4', safe:false, enemy:{name:"Skeleton", alive:true, health:30, maxHealth:30, damage: 13, timer:15000, maxTimer:15000}},
+	room7: {posX: 120, posY: 190, up: 'room8', down: null, left: null, right: 'room6', safe:false, enemy:{name:"Zombie", alive:true, health:20, maxHealth:20, damage: 15, timer:20000, maxTimer:20000}},
+	room8: {posX: 120, posY: 170, up: null, down: 'room7', left: 'room12', right: null, safe:false, enemy:{name:"Necromancer", alive:true, health:50, maxHealth:50, damage: 20, timer:25000, maxTimer:25000}},
+	room9: {posX: 220, posY: 190, up: null, down: null, left: 'room5', right: 'room10', safe:false, enemy:{name:"Bandit Rogue", alive:true, health:20, maxHealth:20, damage: 15, timer:15000, maxTimer:15000}},
+	room10: {posX: 240, posY: 190, up: 'room11', down: null, left: 'room9', right: null, safe:false, enemy:{name:"Bandit Warrior", alive:true, health:30, maxHealth:30, damage: 13, timer:20000, maxTimer:20000}},
+	room11: {posX: 240, posY: 170, up: null, down: 'room10', left: null, right: 'room13', safe:false, enemy:{name:"Bandit Champion", alive:true, health:50, maxHealth:50, damage: 20, timer:25000, maxTimer:25000}},
+	room12: {posX: 100, posY: 170, up: null, down: null, left: null, right: 'room8', safe:true},
+	room13: {posX: 260, posY: 170, up: null, down: null, left: 'room11', right: 'room14', safe:true},
+	room14: {posX: 280, posY: 170, up: 'room19', down: null, left: 'room13', right: 'room15', safe:true},
+	room15: {posX: 300, posY: 170, up: 'room18', down: null, left: 'room14', right: 'room16', safe:true},
+	room16: {posX: 320, posY: 170, up: 'room17', down: null, left: 'room15', right: null, safe:true},
+	room17: {posX: 320, posY: 150, up: 'room22', down: 'room16', left: 'room18', right: null, safe:true},
+	room18: {posX: 300, posY: 150, up: 'room21', down: 'room15', left: 'room19', right: 'room17', safe:true},
+	room19: {posX: 280, posY: 150, up: 'room20', down: 'room14', left: null, right: 'room18', safe:true},
+	room20: {posX: 280, posY: 130, up: null, down: 'room19', left: null, right: 'room21', safe:true},
+	room21: {posX: 300, posY: 130, up: null, down: 'room18', left: 'room20', right: 'room22', safe:true},
+	room22: {posX: 320, posY: 130, up: null, down: 'room17', left: 'room21', right: null, safe:true}
 };
 
 function updateSpawnTimers(){

@@ -16,14 +16,25 @@ function updateMap(data){
 	if(gameMap[player.location].safe)
 	{
 		enemyName.innerHTML = "Name: This room is safe!";
-		enemyHealth.innerHTML = "Health: You can recover health over time here.";
+		enemyHealth.innerHTML = "Status: You can recover health over time here.";
 		enemySpawnTimer.innerHTML = "Heal Timer: 1 second";
 	}
 	else
 	{
+		var currentEnemyHp = gameMap[player.location].enemy.health;
+		var currentEnemyMaxHp = gameMap[player.location].enemy.maxHealth;;
 		enemyName.innerHTML = "Name: " + gameMap[player.location].enemy.name;
-		enemyHealth.innerHTML = "Health: " + gameMap[player.location].enemy.health + " hp";
-		enemySpawnTimer.innerHTML = "Spawn Timer: " + (gameMap[player.location].enemy.timer/1000) + " second(s)";	
+		enemySpawnTimer.innerHTML = "Spawn Timer: " + (gameMap[player.location].enemy.timer/1000) + " second(s)";
+		if(currentEnemyHp ==  currentEnemyMaxHp)
+			enemyHealth.innerHTML = "Status: Perfect Health";
+		else if(currentEnemyHp >  (2 * currentEnemyMaxHp / 3))
+			enemyHealth.innerHTML = "Status: High Health";
+		else if(currentEnemyHp >  (currentEnemyMaxHp / 3))
+			enemyHealth.innerHTML = "Status: Medium Health";
+		else if(currentEnemyHp >  0)
+			enemyHealth.innerHTML = "Status: Low Health";
+		else
+			enemyHealth.innerHTML = "Status: Dead";
 	}
 }
 
@@ -77,7 +88,7 @@ function moveUp(){
 			}
 		}	
 		player.location = gameMap[player.location].up;
-		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
+		combatLog.innerHTML += ("\nYou've moved to " + player.location + "\n");
 		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom, damageTaken: damage});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;	
@@ -100,7 +111,7 @@ function moveDown(){
 			}
 		}	
 		player.location = gameMap[player.location].down;
-		combatLog.innerHTML += ("You've moved to " + player.location + "\n");		
+		combatLog.innerHTML += ("\nYou've moved to " + player.location + "\n");
 		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom, damageTaken: damage});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
@@ -123,7 +134,7 @@ function moveLeft(){
 			}
 		}
 		player.location = gameMap[player.location].left;
-		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
+		combatLog.innerHTML += ("\nYou've moved to " + player.location + "\n");
 		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom, damageTaken: damage});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
@@ -146,7 +157,7 @@ function moveRight(){
 			}
 		}
 		player.location = gameMap[player.location].right;
-		combatLog.innerHTML += ("You've moved to " + player.location + "\n");
+		combatLog.innerHTML += ("\nYou've moved to " + player.location + "\n");
 		socket.emit('changeRoom', {newRoom: player.location, oldRoom: prevRoom, damageTaken: damage});	
 	}
 	combatLog.scrollTop = combatLog.scrollHeight;
