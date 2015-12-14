@@ -204,6 +204,7 @@ function gainExp(data){
 		player.defense += player.level;
 		player.exp -= 100;
 		player.exp = Math.round((player.exp/(player.level * 5)));
+		socket.emit('save', {player: player});
 	}
 	combatLog.innerHTML += ("You've gained " + expGain + " exp! \n");
 	playerLevel.innerHTML = "Level: " + player.level + " Exp: " + player.exp;

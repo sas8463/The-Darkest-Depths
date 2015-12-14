@@ -104,7 +104,7 @@ PlayerSchema.statics.savePlayerData = function(player) {
 			console.log(err);
 			return;
 		}
-		else if(doc == null)
+		else if(doc === null)
 		{
 			console.log("Player does not exist");
 			return;
@@ -128,18 +128,7 @@ PlayerSchema.statics.savePlayerData = function(player) {
 			return null;
 		}
 	});
-}
-
-/*
-PlayerSchema.statics.findByOwner = function(ownerId, callback) {
-	
-	var search = {
-		owner: mongoose.Types.ObjectId(ownerId)
-	};
-	
-	return PlayerModel.find(search).select("name level").exec(callback);
 };
-*/
 
 PlayerModel = mongoose.model('Player', PlayerSchema);
 
