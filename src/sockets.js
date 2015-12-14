@@ -50,8 +50,8 @@ var gameMap = {
 	room34: {posX: 80, posY: 70, up: 'room36', down: 'room32', left: null, right: null, safe:false, enemy:{name:"Gryphon", alive:true, health:1500, maxHealth:1500, damage: 75, timer:60000, maxTimer:60000}},
 	room35: {posX: 40, posY: 50, up: null, down: 'room33', left: null, right: 'room37', safe:true},
 	room36: {posX: 80, posY: 50, up: null, down: 'room34', left: 'room37', right: null, safe:true},
-	room37: {posX: 60, posY: 50, up: 'room38', down: null, left: 'room35', right: 'room36', safe:true, enemy:{name:"Dragonling", alive:true, health:1000, maxHealth:1000, damage: 75, timer:5000, maxTimer:5000}},
-	room38: {posX: 60, posY: 30, up: null, down: 'room37', left: null, right: null, safe:false, enemy:{name:"Dragon", alive:true, health:3000, maxHealth:3000, damage: 150, timer:120000, maxTimer:120000}}
+	room37: {posX: 60, posY: 50, up: 'room38', down: null, left: 'room35', right: 'room36', safe:false, enemy:{name:"Dragonling", alive:true, health:2500, maxHealth:2500, damage: 125, timer:5000, maxTimer:5000}},
+	room38: {posX: 60, posY: 30, up: null, down: 'room37', left: null, right: null, safe:false, enemy:{name:"Dragon", alive:true, health:5000, maxHealth:5000, damage: 250, timer:120000, maxTimer:120000}}
 };
 
 function updateSpawnTimers(){
